@@ -11,7 +11,7 @@ def generate_integer(rng):
 
 
 def generate_decimal(rng):
-	decimal_places = random.choice([1, 2]))
+	decimal_places = random.choice([1, 2])
 	float_num =round(random.uniform(*rng), decimal_places)
 	return decimal.Decimal(str(float_num))
 
