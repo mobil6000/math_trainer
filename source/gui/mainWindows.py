@@ -1,5 +1,6 @@
 ﻿import wx
 from . import defines
+from .pages import *
 
 
 
@@ -14,8 +15,7 @@ class MainFrame1(wx.Frame):
 	#interface: 
 	def initStatusBar(self):
 		self.statusBar = self.CreateStatusBar()
-		self.statusBar.SetFieldsCount(3)
-		self.statusBar.SetStatusWidths([-1, -2, -3])
+		self.statusBar.SetStatusWidths([-3])
 
 
 
@@ -25,10 +25,10 @@ class MainFrame2(wx.Frame):
 		wx.Frame.__init__(self, None, -1, title, defines.main_win_size)
 		self.Centre(direction=wx.BOTH)
 		self.initStatusBar()
+		self.panel = TeacherMainPage(self)
 
 
 	#interface: 
 	def initStatusBar(self):
 		self.statusBar = self.CreateStatusBar()
-		self.statusBar.SetFieldsCount(3)
-		self.statusBar.SetStatusWidths([-1, -2, -3])
+		self.statusBar.SetStatusWidths([-3])
