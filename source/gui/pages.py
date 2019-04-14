@@ -1,5 +1,4 @@
-﻿from ObjectListView import ObjectListView, ColumnDefn
-import wx
+﻿import wx
 from . import defines
 
 
@@ -17,8 +16,15 @@ class TeacherMainPage(wx.Panel):
 		]
 
 
+		self.popupmenu = wx.Menu()
+		for text in defines.teacher_context_menu:
+			item = self.popupmenu.Append(-1, text)
+			self.Bind(wx.EVT_MENU, self.OnPopupItemSelected, item)
+
+
 		self.list = wx.ListCtrl(self, -1, style=wx.LC_REPORT|wx.SUNKEN_BORDER|wx.LC_HRULES|wx.LC_VRULES, size = (900, 160))
 		self.init_list_control()
+		self.list.Bind(wx.EVT_CONTEXT_MENU, self.OnShowPopup)
 		self.button = wx.Button(self, -1, 'Добавить карточку', size = (180, 100))
 		self.button.SetDefault()
 
@@ -35,3 +41,15 @@ class TeacherMainPage(wx.Panel):
 
 		for row in self.rows: 
 			self.list.Append(row)
+
+
+	def OnShowPopup(self, event):
+		pos = event.GetPosition()
+		position = self.ScreenToClient(pos)
+		self.PopupMenu(self.popupmenu, position)
+
+
+	def OnPopupItemSelected(self, event):
+		item = self.popupmenu.FindItemById(event.GetId())
+		text = item.GetText()
+		wx.MessageBox("You selected item '%s'" % text)
