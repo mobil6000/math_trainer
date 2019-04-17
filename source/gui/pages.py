@@ -6,7 +6,7 @@ from . import defines
 class TeacherMainPage(wx.Panel):
 
 	def __init__(self, parent):
-		wx.Panel.__init__(self, parent, -1, size = defines.main_win_size)
+		wx.Panel.__init__(self, parent, -1, size = defines.panel_size)
 		self.SetBackgroundColour('white')
 		self.titles = ['Дата', 'Количество заданий', 'Статус']
 		self.rows = [
@@ -16,13 +16,14 @@ class TeacherMainPage(wx.Panel):
 		]
 
 
-		self.popupmenu = wx.Menu()
-		for text in defines.teacher_context_menu:
-			item = self.popupmenu.Append(-1, text)
-			self.Bind(wx.EVT_MENU, self.OnPopupItemSelected, item)
+		self.popup_menu = wx.Menu()
+		for item in defines.teacher_context_menu:
+			menu_item = self.popup_menu.Append(-1, item)
+			handler = getattr(self, defines.teacher_context_menu[item])
+			self.Bind(wx.EVT_MENU, handler, menu_item)
 
 
-		self.list = wx.ListCtrl(self, -1, style=wx.LC_REPORT|wx.SUNKEN_BORDER|wx.LC_HRULES|wx.LC_VRULES, size = (900, 160))
+		self.list = wx.ListCtrl(self, -1, style=wx.LC_REPORT|wx.LC_SINGLE_SEL|wx.SUNKEN_BORDER|wx.LC_HRULES|wx.LC_VRULES, size = (900, 160))
 		self.init_list_control()
 		self.list.Bind(wx.EVT_CONTEXT_MENU, self.OnShowPopup)
 		self.button = wx.Button(self, -1, 'Добавить карточку', size = (180, 100))
@@ -36,8 +37,8 @@ class TeacherMainPage(wx.Panel):
 
 
 	def init_list_control(self):
-		for text in self.titles:
-			self.list.AppendColumn(text, wx.LIST_FORMAT_CENTRE, width = 300)
+		for title in self.titles:
+			self.list.AppendColumn(title, wx.LIST_FORMAT_CENTRE, width = 300)
 
 		for row in self.rows: 
 			self.list.Append(row)
@@ -46,10 +47,18 @@ class TeacherMainPage(wx.Panel):
 	def OnShowPopup(self, event):
 		pos = event.GetPosition()
 		position = self.ScreenToClient(pos)
-		self.PopupMenu(self.popupmenu, position)
+		self.PopupMenu(self.popup_menu, position)
 
 
-	def OnPopupItemSelected(self, event):
-		item = self.popupmenu.FindItemById(event.GetId())
-		text = item.GetText()
-		wx.MessageBox("You selected item '%s'" % text)
+	def OnClearList(self, event):
+		message = wx.MessageDialog(self, 'Вы действительно хотите очистить список Контрольных работ? ', 'Очистка', style = wx.YES_NO|wx.CANCEL|wx.ICON_QUESTION)
+		if message.ShowModal() == wx.ID_YES:
+			self.list.DeleteAllItems()
+
+
+	def OnEditListItem(self, event):
+		pass
+
+
+	def OnDeleteListItem(self, event):
+		pass
