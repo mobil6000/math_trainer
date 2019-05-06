@@ -1,7 +1,10 @@
-﻿import random
-from decimal import Decimal
+﻿from decimal import Decimal
 from fractions import Fraction
+import random
+from time import sleep
+
 import pytest
+
 import utilites
 
 
@@ -51,3 +54,12 @@ def test_incorrect_argument_order(func):
 		func([1, 0])
 	except ValueError:
 		pytest.fail('Unexpected ValuError ..')
+
+
+def test_time_meter():
+	time_object = utilites.TimeMeter()
+	time_object.start()
+	sleep(3)
+	result = time_object.finish()
+	assert result is not None
+	assert result == 3

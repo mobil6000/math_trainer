@@ -1,6 +1,24 @@
-﻿import random
-import decimal
+﻿import decimal
 import fractions
+import random
+import time
+
+
+
+class TimeMeter:
+
+	def __init__(self):
+		self.__start_time, self.__end_time = None, None
+
+
+	def start(self):
+		if self.__end_time != None: self._end_time = None
+		self.__start_time = time.monotonic()
+
+
+	def finish(self):
+		self.__end_time = time.monotonic()
+		return int(self.__end_time - self.__start_time)
 
 
 
