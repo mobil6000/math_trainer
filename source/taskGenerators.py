@@ -1,9 +1,13 @@
-﻿
+﻿import utilites
+
+
+
 class TaskFactory:
 
 	def __init__(self, taskgen = None):
 		self.__task_generator = taskgen
 		self.__task_counter, self.__right_task_counter =0, 0
+		self.__time_meter = utilites.TimeMeter()
 
 
 	@property
@@ -35,11 +39,13 @@ class TaskFactory:
 		self.__check_task_generator()
 		new_task = self.__task_generator.generate_task()
 		self.__task_counter +=1
+		self.__time_meter.start()
 		return new_task
 
 
 	def check_current_task(self, answer):
 		self.__check_task_generator()
+		self.__time_meter.finish()
 		retcode = self.__task_generator.check_answer(answer)
 		if retcode: self.__right_task_counter +=1
 		return retcode

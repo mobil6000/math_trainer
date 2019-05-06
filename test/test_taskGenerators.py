@@ -1,5 +1,7 @@
 ﻿import pytest
+
 import taskGenerators
+from utilites import TimeMeter
 from . import stubs
 
 
@@ -9,6 +11,7 @@ object = taskGenerators.TaskFactory(stubs.FakeTaskGenerator())
 
 def test_init_generator_object():
 	obj = taskGenerators.TaskFactory()
+	assert isinstance(obj._TaskFactory__time_meter, TimeMeter)
 	assert obj.task_counter == 0 and obj.right_task_counter == 0
 
 
