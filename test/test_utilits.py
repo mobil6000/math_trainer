@@ -63,3 +63,6 @@ def test_time_meter():
 	result = time_object.finish()
 	assert result is not None
 	assert result == 3
+	time_object = utilites.TimeMeter()
+	with pytest.raises(NotImplementedError):
+		time_object.finish()
