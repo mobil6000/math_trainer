@@ -1,3 +1,4 @@
-﻿import os
+﻿from os.path import abspath
 import sys
-sys.path.append(os.path.abspath('source'))
+sys.path.append(abspath('source'))
+del abspath
