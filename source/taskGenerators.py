@@ -2,7 +2,7 @@
 
 
 
-class TaskFactory:
+class Session:
 
 	def __init__(self, taskgen = None):
 		self.__task_generator = taskgen
