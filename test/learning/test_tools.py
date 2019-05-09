@@ -1,8 +1,8 @@
 ﻿import pytest
-import taskGenerators
+import learning
 from utilites import TimeMeter
 
-from . import stubs
+from test import stubs
 
 
 
@@ -10,25 +10,26 @@ class TestSessionObject:
 
 	@pytest.fixture()
 	def session_without_task_generator(self):
-		obj = taskGenerators.Session()
+		obj = learning.Session()
 		return obj
 
 
 	@pytest.fixture()
 	def session_with_created_task(self):
-		obj = taskGenerators.Session(stubs.FakeTaskGenerator())
+		obj = learning.Session(stubs.FakeTaskGenerator())
 		obj.create_new_task()
 		return obj
 
 
 	def setup(self):
-		self.session_object = taskGenerators.Session(stubs.FakeTaskGenerator())
+		self.session_object = learning.Session(stubs.FakeTaskGenerator())
 
 
 	def test_init_generator_object(self):
-		assert self.session_object.task_counter == 0 and self.session_object.right_task_counter == 0
-		assert isinstance(self.session_object.task_generator, stubs.FakeTaskGenerator)
-		assert isinstance(self.session_object._Session__time_meter, TimeMeter)
+		session_object = learning.Session(stubs.FakeTaskGenerator())
+		assert session_object.task_counter == 0 and session_object.right_task_counter == 0
+		assert isinstance(session_object.task_generator, stubs.FakeTaskGenerator)
+		assert isinstance(session_object._Session__time_meter, TimeMeter)
 
 
 	def test_make_task(self):
