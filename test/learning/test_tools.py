@@ -1,5 +1,6 @@
-﻿import pytest
-import learning
+﻿from decimal import Decimal
+import pytest
+from learning import tools
 from utilites import TimeMeter
 
 from test import stubs
@@ -10,23 +11,23 @@ class TestSessionObject:
 
 	@pytest.fixture()
 	def session_without_task_generator(self):
-		obj = learning.Session()
+		obj = tools.Session()
 		return obj
 
 
 	@pytest.fixture()
 	def session_with_created_task(self):
-		obj = learning.Session(stubs.FakeTaskGenerator())
+		obj = tools.Session(stubs.FakeTaskGenerator())
 		obj.create_new_task()
 		return obj
 
 
 	def setup(self):
-		self.session_object = learning.Session(stubs.FakeTaskGenerator())
+		self.session_object = tools.Session(stubs.FakeTaskGenerator())
 
 
 	def test_init_generator_object(self):
-		session_object = learning.Session(stubs.FakeTaskGenerator())
+		session_object = tools.Session(stubs.FakeTaskGenerator())
 		assert session_object.task_counter == 0 and session_object.right_task_counter == 0
 		assert isinstance(session_object.task_generator, stubs.FakeTaskGenerator)
 		assert isinstance(session_object._Session__time_meter, TimeMeter)
@@ -70,3 +71,36 @@ class TestSessionObject:
 	def test_check_task_without_generator(self, session_without_task_generator):
 		with pytest.raises(NotImplementedError):
 			session_without_task_generator.check_current_task('')
+
+
+
+class TestArithmeticParser:
+
+	@classmethod
+	def setup_class(cls):
+		cls.expressions = {
+			'simple': ('17 + 14', 31), 
+			'difficult': ('4 + 6 + 5 * 8', 50), 
+			'brackets': ('14 -(5 + 4) +(13 + 5 * 2)', 28), 
+			'decimal': ('4.2 + 3.3', Decimal('7.5'))
+		}
+
+
+	def test_calculate_simple_expression(self):
+		parser = tools.ArithmeticParser(self.expressions['simple'][0])
+		assert parser.calculate() == self.expressions['simple'][1]
+
+
+	def test_operators_priority(self):
+		parser = tools.ArithmeticParser(self.expressions['difficult'][0])
+		assert parser.calculate() == self.expressions['difficult'][1]
+
+
+	def test_calculate_with_brackets(self):
+		parser = tools.ArithmeticParser(self.expressions['brackets'][0])
+		assert parser.calculate() == self.expressions['brackets'][1]
+
+
+	def test_calculate_with_decimal(self):
+		parser = tools.ArithmeticParser(self.expressions['decimal'][0])
+		assert parser.calculate() == self.expressions['decimal'][1]
