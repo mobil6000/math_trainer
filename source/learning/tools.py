@@ -1,4 +1,5 @@
 ﻿import decimal
+from fractions import Fraction
 
 import utilites
 
@@ -84,6 +85,14 @@ class ArithmeticParser:
 			return False
 
 
+	def __is_fraction(self, number):
+		try:
+			Fraction(number)
+			return True
+		except ValueError:
+			return False
+
+
 	def __get_operator_priority(self, operator):
 		if not self.__is_operator(operator):
 			raise Exception('Не найден оператор "{}"'.format(operator))
@@ -109,17 +118,20 @@ class ArithmeticParser:
 
 	def __read_number(self):
 		result = ''
-		point = 0
-		value = self.__exp[self.__pos]
-		while value.isdigit() or value == '.':
-			if value == '.':
-				point += 1
-				if point > 1:
-					raise Exception
+		numeric_symbols = ('.', '/')
+		char = 0
 
-			result += value
-			self.__pos += 1
+		while True:
 			value = self.__exp[self.__pos]
+			if value.isdigit() or value in numeric_symbols:
+				if value in numeric_symbols:
+					char += 1
+					if char > 1:
+						raise Exception
+				result += value
+				self.__pos += 1
+			else: break
+
 		return result
 
 
@@ -139,6 +151,7 @@ class ArithmeticParser:
 			if token.isspace(): pass
 			elif token.isdigit(): self.__operands.append(int(token))
 			elif self.__is_decimal(token): self.__operands.append(decimal.Decimal(token))
+			elif self.__is_fraction(token): self.__operands.append(Fraction(token))
 			elif self.__is_operator(token):
 
 				if self.__prev_token == '(' and (token == '+' or token == '-'):

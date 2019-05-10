@@ -1,4 +1,5 @@
 ﻿from decimal import Decimal
+from fractions import Fraction
 import pytest
 from learning import tools
 from utilites import TimeMeter
@@ -82,7 +83,8 @@ class TestArithmeticParser:
 			'simple': ('17 + 14', 31), 
 			'difficult': ('4 + 6 + 5 * 8', 50), 
 			'brackets': ('14 -(5 + 4) +(13 + 5 * 2)', 28), 
-			'decimal': ('4.2 + 3.3', Decimal('7.5'))
+			'decimal': ('4.2 + 3.3', Decimal('7.5')), 
+			'fraction': ('4/5 + 1/2', Fraction('13/10'))
 		}
 
 
@@ -104,3 +106,8 @@ class TestArithmeticParser:
 	def test_calculate_with_decimal(self):
 		parser = tools.ArithmeticParser(self.expressions['decimal'][0])
 		assert parser.calculate() == self.expressions['decimal'][1]
+
+
+	def test_calculate_with_fraction(self):
+		parser = tools.ArithmeticParser(self.expressions['fraction'][0])
+		assert parser.calculate() == self.expressions['fraction'][1]

@@ -1,4 +1,5 @@
-﻿ARITHMETIC_OPERATORS = {
+﻿NUMBER_TYPES = ('integer', 'decimal', 'fracction')
+ARITHMETIC_OPERATORS = {
 	'+': (2, 
 		lambda a, b: a + b), 
 	'-': (2, 
