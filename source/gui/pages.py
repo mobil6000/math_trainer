@@ -1,5 +1,6 @@
 ﻿import wx
 from . import defines
+from . import uiHelper
 
 
 
@@ -16,13 +17,7 @@ class TeacherMainPage(wx.Panel):
 		]
 
 
-		self.popup_menu = wx.Menu()
-		for item in defines.teacher_context_menu:
-			menu_item = self.popup_menu.Append(-1, item)
-			handler = getattr(self, defines.teacher_context_menu[item])
-			self.Bind(wx.EVT_MENU, handler, menu_item)
-
-
+		self.popup_menu = uiHelper.create_menu(self, defines.teacher_context_menu)
 		self.list = wx.ListCtrl(self, -1, style=wx.LC_REPORT|wx.LC_SINGLE_SEL|wx.SUNKEN_BORDER|wx.LC_HRULES|wx.LC_VRULES, size = (900, 160))
 		self.init_list_control()
 		self.list.Bind(wx.EVT_CONTEXT_MENU, self.OnShowPopup)
