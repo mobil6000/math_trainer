@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+<title>{title}</title>
+
+<style>
+{style}
+</style>
+
+</head>
+
+
+
+<body>
+<br>
+
+{body_content}
+
+<br>
+</body>
+
+
+
+</html>

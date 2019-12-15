@@ -8,7 +8,7 @@ class Application(wx.App):
 	def OnInit(self):
 		self.app_local = wx.Locale()
 		self.app_local.Init(wx.LANGUAGE_RUSSIAN)
-		self.main_window = gui.MainFrame1('Тренажёр')
+		self.main_window = gui.MainFrame4('Тренажёр')
 		self.SetTopWindow(self.main_window)
 		self.main_window.Show()
 		return True

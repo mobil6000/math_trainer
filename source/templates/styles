@@ -1,0 +1,16 @@
+body {
+	cursor: default; 
+	font: 18px "Helvetica Neue";
+	color: rgba(0, 0, 0, 1);
+	font-weight: 200;
+	padding-left: 30px;
+	padding-top: 0px;
+	background:rgba(21, 163, 240, 0.3);
+}
+
+table {
+	border-collapse: collapse; 
+	border: 3px solid grey;
+}
+
+th, td {border: 1px solid grey;}
