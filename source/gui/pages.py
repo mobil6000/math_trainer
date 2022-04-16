@@ -15,10 +15,10 @@ class ReportPage(wx.Panel):
 		self.button.SetDefault()
 		self.button.Bind(wx.EVT_BUTTON, self.Back)
 
-		self.html = uiHelper.create_html_ctrl(self, 'report.html', (700, 650))
+		self.html = uiHelper.create_html_ctrl(self, 'source/report.html', (700, 650))
 
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
-		mainSizer.Add(self.html, proportion = 1, flag = wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, border = 10)
+		mainSizer.Add(self.html, proportion = 1, flag = wx.ALL|wx.EXPAND, border = 10)
 		mainSizer.Add(self.button, proportion = 0, flag = wx.ALL|wx.CENTER, border = 5)
 		self.SetSizer(mainSizer)
 		self.Layout()
@@ -51,7 +51,7 @@ class TeacherMainPage(wx.Panel):
 		self.button.SetDefault()
 
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
-		mainSizer.Add(self.list, proportion = 1, flag = wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, border = 10)
+		mainSizer.Add(self.list, proportion = 1, flag = wx.ALL|wx.EXPAND, border = 10)
 		mainSizer.Add(self.button, proportion = 0, flag = wx.ALL|wx.CENTER, border = 5)
 		self.SetSizer(mainSizer)
 		self.Layout()
