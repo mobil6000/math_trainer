@@ -1,5 +1,4 @@
 ﻿from decimal import Decimal
-from fractions import Fraction
 import random
 from time import sleep
 
@@ -9,37 +8,23 @@ import utilites
 
 
 
-class TestNumbers:
-
-	def setup(self):
-		self.range = random.sample(range(1, 11), 2)
-		if self.range[0] > self.range[1]: self.range.reverse()
-
-
-	def test_generate_integer(self):
-		num = utilites.generate_integer(self.range)
-		assert isinstance(num, int)
-		assert self.range[0] <= num <= self.range[1]
+@pytest.fixture
+def new_range() -> list[int]:
+	numbers: list = random.sample(range(1, 16), 2)
+	if numbers[0] > numbers[1]:
+		numbers.reverse()
+	return numbers
 
 
-	def test_generate_decimal(self):
-		num = utilites.generate_decimal(self.range)
-		assert isinstance(num, Decimal)
-		integer_point = num.as_tuple()[1][0]
-		assert self.range[0] <= integer_point <= self.range[1]
+def test_get_random_int(new_range: list[int]):
+	expected_result = utilites.get_random_int(*new_range)
+	assert new_range[0] <= expected_result <= new_range[1]
 
 
-	def test_generate_fraction(self):
-		num = utilites.generate_fraction(self.range)
-		assert isinstance(num, Fraction)
-
-
-	@pytest.mark.parametrize("func", [utilites.generate_integer, utilites.generate_fraction])
-	def test_incorrect_argument_order(self, func):
-		try:
-			func([1, 0])
-		except ValueError:
-			pytest.fail('Unexpected ValuError')
+def test_get_random_decimal(new_range: list[int]):
+	expected_result = utilites.get_random_decimal(*new_range)
+	integer_part = expected_result.as_tuple()[1][0]
+	assert new_range[0] <= integer_part <= new_range[1]
 
 
 

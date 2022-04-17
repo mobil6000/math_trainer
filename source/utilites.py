@@ -1,4 +1,4 @@
-﻿import decimal
+﻿from decimal import Decimal
 import random
 import time
 from typing import Optional
@@ -7,15 +7,15 @@ from typing import Optional
 
 class TimeMeter:
 
-	__slots__ = ('start_time', 'end_time')
-	start_time: Optional[float]
-	end_time: Optional[float]
+	__slots__ = ('__start_time', '__end_time')
+	__start_time: Optional[float]
+	__end_time: Optional[float]
 
 	def __init__(self) -> None:
 		self.__start_time, self.__end_time = None, None
 
 
-	def start(self -> None):
+	def start(self) -> None:
 		if self.__end_time is not None:
 			self._end_time = None
 		self.__start_time = time.monotonic()
