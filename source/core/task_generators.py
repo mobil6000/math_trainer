@@ -1,22 +1,34 @@
-﻿from decimal import Decimal
+﻿from abc import abstractmethod
+from decimal import Decimal
 import random
-from typing import Union
+from typing import Protocol, Union
 
 from .import utilites
 from .defines import *
 
 
+class MathTask(Protocol:):
 
-class ArithmeticTask:
-
-	def __init__(self, numberType: str,) -> None:
-		self.__number_type = numberType
-		self.__current_expression = self.__generate_expression()
+	def __init__(self) -> None:
+		self.__current_expression = self._generate_expression()
 
 
 	@property
 	def expression(self) -> str:
 		return self.__current_expression
+
+
+	@abstractmethod
+	def check_result(self, expected_result: str) -> bool:
+		pass
+
+
+
+class ArithmeticTask(MathTask):
+
+	def __init__(self, numberType: str,) -> None:
+		self.__number_type = numberType
+		super()._generate_expression()
 
 
 	def __get_number_type(self) -> str:
@@ -42,6 +54,6 @@ class ArithmeticTask:
 		return template.format(operand1, operator, operand2)
 
 
-	def check_result(self, expected_result) -> bool:
+	def check_result(self, expected_result: str) -> bool:
 		real_result = eval(self.__current_expression[:-3])
 		return int(expected_result) == real_result
