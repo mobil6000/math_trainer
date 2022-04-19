@@ -4,7 +4,7 @@ from time import sleep
 
 import pytest
 
-import utilites
+from core import utilites
 
 
 
