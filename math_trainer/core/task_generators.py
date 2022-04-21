@@ -51,7 +51,7 @@ class ArithmeticTask(MathTask):
 
     def __init__(self, numberType: str,) -> None:
         self.__number_type = numberType
-        super()._generate_expression()
+        super().__init__()
 
 
     def __get_number_type(self) -> str:
@@ -89,3 +89,32 @@ class ArithmeticTask(MathTask):
         '''
         real_result = eval(self.__current_expression[:-3])
         return int(expected_result) == real_result
+
+
+
+@final
+class QuadraticEquationTask(MathTask):
+    '''
+    Implement generation of quadratic equations
+    '''
+
+    def __init__(self) -> None:
+        self.__roots = (utilites.get_random_int(1, 5), utilites.get_random_int(1, 5))
+        super().__init__()
+
+
+    def _generate_expression(self) -> str:
+        template = 'x^2 {}x + {} = 0'
+        coefficient = - (self.__roots[0] + self.__roots[1])
+        constant_term = self.__roots[0] * self.__roots[1]
+        return template.format(coefficient, constant_term)
+
+
+    def check_result(self, expected_result: str) -> bool:
+        root_candedates = tuple(map(int, expected_result.split(',')))
+        if root_candedates[0] == self.__roots[0] and root_candedates[1] == self.__roots[1]:
+            return True
+        elif root_candedates[1] == self.__roots[0] and root_candedates[0] == self.__roots[1]:
+            return True
+        else:
+            return False
