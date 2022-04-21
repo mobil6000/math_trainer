@@ -5,13 +5,13 @@ from . import defines
 
 
 
-def create_menu(parent, menuData):
+def create_menu(parent, menu_data):
     menu = wx.Menu()
-    for item in menuData:
+    for item in menu_data:
         menu_item = menu.Append(-1, item)
-        tmp = menuData[item]
+        tmp = menu_data[item]
         if tmp is not None:
-            handler = getattr(parent, menuData[item])
+            handler = getattr(parent, tmp)
             menu.Bind(wx.EVT_MENU, handler, menu_item)
     return menu
 
