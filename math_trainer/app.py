@@ -1,4 +1,6 @@
-﻿import gui
+﻿import winsound
+
+import gui
 import wx
 
 
@@ -6,6 +8,7 @@ import wx
 class Application(wx.App):
 
     def OnInit(self) -> bool:
+        winsound.PlaySound('math_trainer/sounds/run.wav', winsound.SND_ASYNC)
         self.app_local = wx.Locale()
         self.app_local.Init(wx.LANGUAGE_RUSSIAN)
         self.main_window = gui.MainFrame1('Тренажёр')
