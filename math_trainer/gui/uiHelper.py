@@ -1,4 +1,6 @@
-﻿import wx
+﻿from typing import Optional
+
+import wx
 import wx.html2 as html
 
 from . import defines
@@ -23,6 +25,15 @@ def create_html_ctrl(parent, html_file, size, context_menu=False):
         content = f.read()
     ctrl.SetPage(content, '')
     return ctrl
+
+
+def use_selection_dialog(parent: wx.Window, title: str, choices: tuple[str], label: str='',) -> Optional[str]:
+    dialog = wx.SingleChoiceDialog(parent, label, title, choices)
+    dialog.SetSelection(0)
+    if dialog.ShowModal() == wx.ID_OK:
+        return dialog.GetSelection()
+    dialog.Destroy()
+    return None
 
 
 
