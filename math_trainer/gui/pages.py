@@ -1,18 +1,23 @@
-﻿import wx
+﻿from typing import Callable, Optional
+
+from core.task_generators import MathTask
+import wx
 
 from . import defines
 
 
 
-class Workspace1(wx.Panel):
+class Workspace(wx.Panel):
 
-    def __init__(self, parent, header, text):
+    def __init__(self, parent: wx.Window, header: str, task_factory: Callable) -> None:
+        self.__task_factory = task_factory
+        self.__current_task: Optional[MathTask] = None
         wx.Panel.__init__(self, parent, -1, size=defines.panel_size)
         self.SetBackgroundColour('white')
 
+
         self.tLabel = wx.StaticText(self, -1, header)
         self.task = wx.TextCtrl(self, -1, style=wx.TE_MULTILINE | wx.TE_READONLY, size=(360, 100))
-        self.task.AppendText(text)
         self.aLabel = wx.StaticText(self, -1, 'Ваш ответ',)
         self.answer = wx.TextCtrl(self, -1, style=wx.TE_PROCESS_ENTER, size=(200, 30))
         self.answer.Bind(wx.EVT_KEY_DOWN, self.OnKeyPress)
@@ -25,6 +30,7 @@ class Workspace1(wx.Panel):
         self.sizer.AddGrowableCol(1)
         self.SetSizer(self.sizer)
         self.Layout()
+        self.__generate_new_exercise()
 
 
     def OnKeyPress(self, event):
@@ -32,3 +38,9 @@ class Workspace1(wx.Panel):
             self.task.SetFocus()
         else:
             event.Skip()
+
+
+    def __generate_new_exercise(self):
+        task = self.__task_factory()
+        self.task.AppendText(task.expression)
+        self.task.SetFocus()

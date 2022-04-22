@@ -27,7 +27,12 @@ def create_html_ctrl(parent, html_file, size, context_menu=False):
     return ctrl
 
 
-def use_selection_dialog(parent: wx.Window, title: str, choices: tuple[str], label: str='',) -> Optional[str]:
+def use_selection_dialog(
+    parent: wx.Window,
+    title: str,
+    choices: tuple[str, ...],
+    label: str=''
+) -> Optional[str]:
     dialog = wx.SingleChoiceDialog(parent, label, title, choices)
     dialog.SetSelection(0)
     if dialog.ShowModal() == wx.ID_OK:

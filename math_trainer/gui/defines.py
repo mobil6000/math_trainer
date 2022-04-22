@@ -10,7 +10,7 @@ project_path: Final = Path(__file__).resolve().parent
 
 main_menu = {
     'О программе': None,
-    'Арифметика': None,
+    'Арифметика': 'on_click_menu_for_arithmetic',
     'Квадратные уровнения': None,
     'выход': None
 }
