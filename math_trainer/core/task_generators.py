@@ -13,12 +13,12 @@ class MathTask:
     '''
 
     def __init__(self) -> None:
-        self.__current_expression = self._generate_expression()
+        self._current_expression = self._generate_expression()
 
 
     @property
     def expression(self) -> str:
-        return self.__current_expression
+        return self._current_expression
 
 
     @abstractmethod
@@ -48,6 +48,8 @@ class ArithmeticTask(MathTask):
 
     __NUMBER_TYPES = ('integer', 'decimal',)
     __OPERATORS = ('+', '-', '*', '/',)
+    __current_operator: str
+    __numbers: tuple[Union[int, Decimal], ...]
 
     def __init__(self, numberType: str,) -> None:
         self.__number_type = numberType
@@ -79,16 +81,20 @@ class ArithmeticTask(MathTask):
         template = '{0} {1} {2} =?'
         operand1 = self.__get_number(self.__get_number_type())
         operand2 = self.__get_number(self.__get_number_type())
-        operator = self.__get_operator()
-        return template.format(operand1, operator, operand2)
+        self.__current_operator = self.__get_operator()
+        if self.__current_operator == '/' and (isinstance(operand1, int) and isinstance(operand2, int)):
+            operand1 *= operand2
+        self.__numbers = (operand1, operand2,)
+        return template.format(operand1, self.__current_operator, operand2)
 
 
     def check_result(self, expected_result: str) -> bool:
         '''
         Checks correctness of the passed result of the arithmetic expression calculation
         '''
-        real_result = eval(self.__current_expression[:-3])
-        return int(expected_result) == real_result
+        arithmetic_function = utilites.ARITHMETIC_FUNCTIONS[self.__current_operator]
+        real_result = arithmetic_function(*self.__numbers)
+        return expected_result == str(real_result)
 
 
 

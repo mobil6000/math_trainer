@@ -24,7 +24,7 @@ class TrainingSession:
         self.__number_of_tasks = number_of_tasks
         self.__task_generator = task_generator
         self.__generator_params = params
-        self.__results = {'task_counter': 0, 'right_task_counter': 0}
+        self.__results = {'task_counter': 0, 'right_task_counter': 0, 'time_for_every_task': []}
         self.__time_meter = TimeMeter()
         self.__task_time_meter = TimeMeter()
         self.__time_meter.start()

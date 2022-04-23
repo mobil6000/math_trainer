@@ -9,9 +9,8 @@ from . import defines
 
 class Workspace(wx.Panel):
 
-    def __init__(self, parent: wx.Window, header: str, task_factory: Callable) -> None:
-        self.__task_factory = task_factory
-        self.__current_task: Optional[MathTask] = None
+    def __init__(self, parent: wx.Window, header: str, session_object) -> None:
+        self.__session = session_object
         wx.Panel.__init__(self, parent, -1, size=defines.panel_size)
         self.SetBackgroundColour('white')
 
@@ -21,6 +20,7 @@ class Workspace(wx.Panel):
         self.aLabel = wx.StaticText(self, -1, 'Ваш ответ',)
         self.answer = wx.TextCtrl(self, -1, style=wx.TE_PROCESS_ENTER, size=(200, 30))
         self.answer.Bind(wx.EVT_KEY_DOWN, self.OnKeyPress)
+        self.answer.Bind(wx.EVT_TEXT_ENTER, self.on_text_enter)
 
         self.sizer = wx.FlexGridSizer(rows=2, cols=2, hgap=6, vgap=6)
         self.sizer.Add(self.tLabel, 0, wx.ALIGN_RIGHT)
@@ -40,7 +40,17 @@ class Workspace(wx.Panel):
             event.Skip()
 
 
+    def on_text_enter(self, event):
+        if self.answer.GetValue() == '':
+            pass
+        result = self.__session.check_task_result(self.answer.GetValue())
+        self.answer.Clear()
+        self.task.Clear()
+        self.__generate_new_exercise()
+
+
     def __generate_new_exercise(self):
-        task = self.__task_factory()
-        self.task.AppendText(task.expression)
+        expression = next(self.__session.generate_task())
+        self.task.AppendText(expression)
         self.task.SetFocus()
+

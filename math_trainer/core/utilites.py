@@ -5,6 +5,15 @@ from typing import final, Optional
 
 
 
+ARITHMETIC_FUNCTIONS = {
+    '+': lambda num1, num2: num1 + num2,
+    '-': lambda num1, num2: num1 - num2,
+    '*': lambda num1, num2: num1 * num2,
+    '/': lambda num1, num2: num1 // num2 if isinstance(num1, int) and isinstance(num2, int) else num1 / num2,
+}
+
+
+
 @final
 class TimeMeter:
 
