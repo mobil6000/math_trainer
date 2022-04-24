@@ -11,7 +11,7 @@ class Application(wx.App):
         winsound.PlaySound('math_trainer/sounds/run.wav', winsound.SND_ASYNC)
         self.app_local = wx.Locale()
         self.app_local.Init(wx.LANGUAGE_RUSSIAN)
-        self.main_window = gui.MainFrame1('Тренажёр')
+        self.main_window = gui.MainFrame('Математический тренажёр')
         self.SetTopWindow(self.main_window)
         self.main_window.Show()
         return True
@@ -19,5 +19,5 @@ class Application(wx.App):
 
 
 if __name__ == '__main__':
-    student = Application()
-    student.MainLoop()
+    app = Application()
+    app.MainLoop()

@@ -1,30 +1,25 @@
 ﻿from typing import Optional
 
 import wx
-import wx.html2 as html
-
-from . import defines
 
 
 
-def create_menu(parent, menu_data):
+main_menu_struct = {
+    'Арифметика': 'on_click_menu_for_arithmetic',
+    'Квадратные уровнения': 'on_click_menu_for_equation',
+    'выход': None
+}
+
+
+def create_menu(parent: wx.Window) -> wx.Menu:
     menu = wx.Menu()
-    for item in menu_data:
+    for item in main_menu_struct:
         menu_item = menu.Append(-1, item)
-        tmp = menu_data[item]
+        tmp = main_menu_struct[item]
         if tmp is not None:
             handler = getattr(parent, tmp)
             menu.Bind(wx.EVT_MENU, handler, menu_item)
     return menu
-
-
-def create_html_ctrl(parent, html_file, size, context_menu=False):
-    ctrl = html.WebView.New(parent)
-    ctrl.EnableContextMenu(context_menu)
-    with open(html_file, 'r') as f:
-        content = f.read()
-    ctrl.SetPage(content, '')
-    return ctrl
 
 
 def use_selection_dialog(
@@ -32,7 +27,7 @@ def use_selection_dialog(
     title: str,
     choices: tuple[str, ...],
     label: str=''
-) -> Optional[str]:
+) -> Optional[int]:
     dialog = wx.SingleChoiceDialog(parent, label, title, choices)
     dialog.SetSelection(0)
     if dialog.ShowModal() == wx.ID_OK:
@@ -44,18 +39,21 @@ def use_selection_dialog(
 
 class ReportDialog(wx.Dialog):
 
-    def __init__(self, parent, title, text):
-        wx.Dialog.__init__(self, parent, -1, title, size=defines.panel_size)
-        self.text = wx.TextCtrl(
-            self,
-            -1,
-            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_RICH2,
-            size=(680, 150)
-        )
-        self.text.AppendText(text)
+    def __init__(
+        self,
+        parent: wx.Window,
+        win_size: tuple[int, int],
+        title: str,
+        report: str
+    ) -> None:
+        wx.Dialog.__init__(self, parent, -1, title, size=win_size)
+
+        text_ctrl_style = wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_RICH2
+        self.text = wx.TextCtrl(self, -1, style=text_ctrl_style, size=(680, 150))
+        self.text.AppendText(report)
         self.text.SetInsertionPoint(0)
-        self.btClose = wx.Button(self, -1, 'Закрыть', size=(70, 70))
-        self.btClose.Bind(wx.EVT_BUTTON, self.OnClose)
+        self.btClose = wx.Button(self, -1, 'Закрыть отчёт', size=(70, 70))
+        self.btClose.Bind(wx.EVT_BUTTON, self.on_close)
 
         self.buttonSizer = wx.StdDialogButtonSizer()
         self.buttonSizer.AddButton(self.btClose)
@@ -67,5 +65,5 @@ class ReportDialog(wx.Dialog):
         self.sizer.Fit(self)
 
 
-    def OnClose(self, event):
+    def on_close(self, event):
         self.Destroy()

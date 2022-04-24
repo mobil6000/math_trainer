@@ -1,37 +1,16 @@
-﻿import winsound
+﻿from typing import Final
+import winsound
 
+from core import ArithmeticTask, QuadraticEquationTask, TrainingSession
 from core.session import make_report
 import wx
 
-
-from . import defines
-
+from .ui_helpers import create_menu, ReportDialog, use_selection_dialog
 
 
-class ReportDialog(wx.Dialog):
 
-    def __init__(self, parent: wx.Window, title: str, report: str) -> None:
-        wx.Dialog.__init__(self, parent, -1, title, size=defines.main_win_size)
-
-        text_ctrl_style = wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_RICH2
-        self.text = wx.TextCtrl(self, -1, style=text_ctrl_style, size=(680, 150))
-        self.text.AppendText(report)
-        self.text.SetInsertionPoint(0)
-        self.btClose = wx.Button(self, -1, 'Закрыть отчёт', size=(70, 70))
-        self.btClose.Bind(wx.EVT_BUTTON, self.on_close)
-
-        self.buttonSizer = wx.StdDialogButtonSizer()
-        self.buttonSizer.AddButton(self.btClose)
-        self.buttonSizer.Realize()
-        self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.sizer.Add(self.text, 0, wx.ALL, 5)
-        self.sizer.Add(self.buttonSizer, 0, wx.EXPAND | wx.ALL, 5)
-        self.SetSizer(self.sizer)
-        self.sizer.Fit(self)
-
-
-    def on_close(self, event):
-        self.Destroy()
+main_win_size: Final = (980, 670)
+panel_size: Final = (main_win_size[0] - 20, main_win_size[1] - 30)
 
 
 
@@ -39,7 +18,7 @@ class Workspace(wx.Panel):
 
     def __init__(self, parent: wx.Window, header: str, session_object) -> None:
         self.__session = session_object
-        wx.Panel.__init__(self, parent, -1, size=defines.panel_size)
+        wx.Panel.__init__(self, parent, -1, size=panel_size)
         self.SetBackgroundColour('white')
         self.Bind(wx.EVT_CLOSE, self.on_close)
 
@@ -80,7 +59,7 @@ class Workspace(wx.Panel):
 
     def on_close(self, event):
         report = make_report(self.__session.results)
-        dialog = ReportDialog(self, 'flf', report)
+        dialog = ReportDialog(self, main_win_size, 'flf', report)
         dialog.ShowModal()
         self.Destroy()
 
@@ -100,3 +79,42 @@ class Workspace(wx.Panel):
             winsound.PlaySound('math_trainer/sounds/rightAnswer.wav', winsound.SND_ASYNC)
         else:
             winsound.PlaySound('math_trainer/sounds/wrongAnswer.wav', winsound.SND_ASYNC)
+
+
+
+class MainFrame(wx.Frame):
+
+    def __init__(self, title: str) -> None:
+        wx.Frame.__init__(self, None, -1, title, main_win_size)
+        self.Centre(direction=wx.BOTH)
+        self.init_statusBar()
+        self.init_menubar()
+
+
+    def init_statusBar(self) -> None:
+        self.statusBar = self.CreateStatusBar()
+        self.statusBar.SetStatusWidths([-3])
+
+
+    def init_menubar(self) -> None:
+        self.menuBar = wx.MenuBar()
+        menu = create_menu(self)
+        self.menuBar.Append(menu, 'Главное меню')
+        self.SetMenuBar(self.menuBar)
+
+
+    def on_click_menu_for_arithmetic(self, event):
+        title = 'Выберете тип чисел:'
+        number_type_choices = ('integer', 'decimal')
+        selection = use_selection_dialog(self, title, ('Целые числа', 'Десятичные дроби'))
+        if selection is not None:
+            params = {'numberType': number_type_choices[selection]}
+            session = TrainingSession(ArithmeticTask, params)
+        else:
+            session = TrainingSession(ArithmeticTask)
+        Workspace(self, 'Вычислите арифметическое выражение:', session)
+
+
+    def on_click_menu_for_equation(self, event):
+        session = TrainingSession(QuadraticEquationTask)
+        Workspace(self, 'Решите квадратное уравнение:', session)

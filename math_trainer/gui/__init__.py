@@ -1,1 +1,1 @@
-﻿from .mainWindows import MainFrame1  # Noqa
+﻿from .windows import MainFrame  # Noqa
