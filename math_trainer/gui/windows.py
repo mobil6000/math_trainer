@@ -1,4 +1,5 @@
-﻿from typing import Final
+﻿from typing import Final as Constant
+from typing import final
 import winsound
 
 from core import ArithmeticTask, QuadraticEquationTask, TrainingSession
@@ -9,11 +10,12 @@ from .ui_helpers import create_menu, ReportDialog, use_selection_dialog
 
 
 
-main_win_size: Final = (980, 670)
-panel_size: Final = (main_win_size[0] - 20, main_win_size[1] - 30)
+main_win_size: Constant = (980, 670)
+panel_size: Constant = (main_win_size[0] - 20, main_win_size[1] - 30)
 
 
 
+@final
 class Workspace(wx.Panel):
 
     def __init__(self, parent: wx.Window, header: str, session_object) -> None:
@@ -40,14 +42,14 @@ class Workspace(wx.Panel):
         self.__generate_new_exercise()
 
 
-    def OnKeyPress(self, event):
+    def OnKeyPress(self, event: wx.Event) -> None:
         if event.GetKeyCode() == wx.WXK_TAB:
             self.task.SetFocus()
         else:
             event.Skip()
 
 
-    def on_text_enter(self, event):
+    def on_text_enter(self, event: wx.Event) -> None:
         if self.answer.GetValue() == '':
             pass
         result = self.__session.check_task_result(self.answer.GetValue())
@@ -57,14 +59,14 @@ class Workspace(wx.Panel):
         self.__generate_new_exercise()
 
 
-    def on_close(self, event):
+    def on_close(self, event: wx.Event) -> None:
         report = make_report(self.__session.results)
         dialog = ReportDialog(self, main_win_size, 'flf', report)
         dialog.ShowModal()
         self.Destroy()
 
 
-    def __generate_new_exercise(self):
+    def __generate_new_exercise(self) -> None:
         try:
             expression = self.__session.generate_task()
         except StopIteration:
@@ -82,6 +84,7 @@ class Workspace(wx.Panel):
 
 
 
+@final
 class MainFrame(wx.Frame):
 
     def __init__(self, title: str) -> None:
@@ -103,7 +106,7 @@ class MainFrame(wx.Frame):
         self.SetMenuBar(self.menuBar)
 
 
-    def on_click_menu_for_arithmetic(self, event):
+    def on_click_menu_for_arithmetic(self, event: wx.Event) -> None:
         title = 'Выберете тип чисел:'
         number_type_choices = ('integer', 'decimal')
         selection = use_selection_dialog(self, title, ('Целые числа', 'Десятичные дроби'))
@@ -115,6 +118,6 @@ class MainFrame(wx.Frame):
         Workspace(self, 'Вычислите арифметическое выражение:', session)
 
 
-    def on_click_menu_for_equation(self, event):
+    def on_click_menu_for_equation(self, event: wx.Event) -> None:
         session = TrainingSession(QuadraticEquationTask)
         Workspace(self, 'Решите квадратное уравнение:', session)

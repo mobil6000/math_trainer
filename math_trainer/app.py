@@ -1,10 +1,12 @@
-﻿import winsound
+﻿from typing import final
+import winsound
 
 import gui
 import wx
 
 
 
+@final
 class Application(wx.App):
 
     def OnInit(self) -> bool:
