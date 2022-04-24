@@ -1,4 +1,4 @@
-﻿from typing import final, Optional, TypedDict
+﻿from typing import final, Optional, Type, TypedDict
 
 from .task_generators import MathTask
 from .utilites import TimeMeter
@@ -21,7 +21,7 @@ class TrainingSession:
 
     def __init__(
         self,
-        task_generator,
+        task_generator: Type[MathTask],
         params: Optional[dict]=None,
         number_of_tasks: int = 10
     ) -> None:
