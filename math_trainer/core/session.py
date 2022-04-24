@@ -1,4 +1,4 @@
-﻿from typing import final, Generator, Optional, TypedDict
+﻿from typing import final, Optional, TypedDict
 
 from .task_generators import MathTask
 from .utilites import TimeMeter
@@ -8,8 +8,7 @@ from .utilites import TimeMeter
 class TrainingResult(TypedDict, total=False):
     task_counter: int
     right_task_counter: int
-    time_for_all_tasks: int
-    time_for_every_task: list[tuple[int, int]]
+    training_time: int
     average_time: float
     percentage_of_correct_answers: int
 
@@ -20,13 +19,17 @@ class TrainingSession:
     __current_task: MathTask
     __results: TrainingResult
 
-    def __init__(self, task_generator, params: Optional[dict], number_of_tasks: int = 10) -> None:
+    def __init__(
+        self,
+        task_generator,
+        params: Optional[dict]=None,
+        number_of_tasks: int = 10
+    ) -> None:
         self.__number_of_tasks = number_of_tasks
         self.__task_generator = task_generator
         self.__generator_params = params
-        self.__results = {'task_counter': 0, 'right_task_counter': 0, 'time_for_every_task': []}
+        self.__results = {'task_counter': 0, 'right_task_counter': 0}
         self.__time_meter = TimeMeter()
-        self.__task_time_meter = TimeMeter()
         self.__time_meter.start()
 
 
@@ -35,23 +38,37 @@ class TrainingSession:
         return self.__results
 
 
-    def generate_task(self) -> Generator:
-        while self.__results['task_counter'] <= self.__number_of_tasks:
-            if self.__generator_params is not None:
-                self.__current_task = self.__task_generator(**self.__generator_params)
-            else:
-                self.__current_task = self.__task_generator()
-            self.__task_time_meter.start()
-            yield self.__current_task.expression
+    def generate_task(self) -> str:
+        self.__results['task_counter'] += 1
+        if self.__results['task_counter'] == self.__number_of_tasks:
+            self.__results['training_time'] = self.__time_meter.finish()
+            self.__compute_statistics()
+            raise StopIteration
+        if self.__generator_params is not None:
+            self.__current_task = self.__task_generator(**self.__generator_params)
+        else:
+            self.__current_task = self.__task_generator()
+        return self.__current_task.expression
 
 
     def check_task_result(self, answer: str) -> bool:
-        self.__results['task_counter'] += 1
-        time_for_solving_task = self.__task_time_meter.finish()
         result = self.__current_task.check_result(answer)
         if result:
             self.__results['right_task_counter'] += 1
-        self.__results['time_for_every_task'].append(
-            (self.__results['task_counter'], time_for_solving_task)
-        )
         return result
+
+
+    def __compute_statistics(self) -> None:
+        self.__results['average_time'] = (
+            self.__results['training_time'] / self.__results['task_counter']
+        )
+        self.__results['percentage_of_correct_answers'] = (
+            int(self.__results['right_task_counter'] * 100 / self.__results['task_counter'])
+        )
+
+
+
+def make_report(data: TrainingResult) -> str:
+    with open('math_trainer/report_template', 'r') as file_object:
+        report = file_object.read().format(**data)
+    return report

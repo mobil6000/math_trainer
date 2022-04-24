@@ -1,4 +1,4 @@
-﻿from core import ArithmeticTask, TrainingSession, QuadraticEquationTask
+﻿from core import ArithmeticTask, QuadraticEquationTask, TrainingSession
 import wx
 
 from . import defines
@@ -32,5 +32,14 @@ class MainFrame1(wx.Frame):
         title = 'Выберете тип чисел:'
         number_type_choices = ('integer', 'decimal')
         selection = uiHelper.use_selection_dialog(self, title, ('Целые числа', 'Десятичные дроби'))
-        session = TrainingSession(ArithmeticTask, {'numberType': 'integer'})
-        workspace = pages.Workspace(self, 'Вычислите арифметическое выражение:', session)
+        if selection is not None:
+            params = {'numberType': number_type_choices[int(selection)]}
+            session = TrainingSession(ArithmeticTask, params)
+        else:
+            session = TrainingSession(ArithmeticTask)
+        pages.Workspace(self, 'Вычислите арифметическое выражение:', session)
+
+
+    def on_click_menu_for_equation(self, event):
+        session = TrainingSession(QuadraticEquationTask)
+        pages.Workspace(self, 'Решите квадратное уравнение:', session)

@@ -9,7 +9,8 @@ ARITHMETIC_FUNCTIONS = {
     '+': lambda num1, num2: num1 + num2,
     '-': lambda num1, num2: num1 - num2,
     '*': lambda num1, num2: num1 * num2,
-    '/': lambda num1, num2: num1 // num2 if isinstance(num1, int) and isinstance(num2, int) else num1 / num2,
+    '/': lambda nm1, nm2:
+        nm1 // nm2 if isinstance(nm1, int) and isinstance(nm2, int) else nm1 / nm2,
 }
 
 

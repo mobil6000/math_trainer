@@ -1,7 +1,7 @@
 ﻿from abc import abstractmethod
 from decimal import Decimal
 import random
-from typing import final, Union
+from typing import final, Optional, Union
 
 from .import utilites
 
@@ -51,7 +51,7 @@ class ArithmeticTask(MathTask):
     __current_operator: str
     __numbers: tuple[Union[int, Decimal], ...]
 
-    def __init__(self, numberType: str,) -> None:
+    def __init__(self, numberType: Optional[str]=None) -> None:
         self.__number_type = numberType
         super().__init__()
 
@@ -79,13 +79,13 @@ class ArithmeticTask(MathTask):
         Generates an arithmetic expression.
         '''
         template = '{0} {1} {2} =?'
-        operand1 = self.__get_number(self.__get_number_type())
-        operand2 = self.__get_number(self.__get_number_type())
+        nm1 = self.__get_number(self.__get_number_type())
+        nm2 = self.__get_number(self.__get_number_type())
         self.__current_operator = self.__get_operator()
-        if self.__current_operator == '/' and (isinstance(operand1, int) and isinstance(operand2, int)):
-            operand1 *= operand2
-        self.__numbers = (operand1, operand2,)
-        return template.format(operand1, self.__current_operator, operand2)
+        if self.__current_operator == '/' and (isinstance(nm1, int) and isinstance(nm2, int)):
+            nm1 *= nm2
+        self.__numbers = (nm1, nm2,)
+        return template.format(nm1, self.__current_operator, nm2)
 
 
     def check_result(self, expected_result: str) -> bool:
